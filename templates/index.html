@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="jumbotron jumbotron-fluid text-center py-5">
+  <div class="container">
+    <h1 class="display-4 font-weight-bold text-primary mb-4">FinanceMe</h1>
+    <p class="lead text-secondary">Take control of your finances with FinanceMe. Track your income, expenses, and savings, and make informed financial decisions.</p>
+    
+    {% if not is_authenticated() %}
+      <a href="{{url_for('login')}}" class="btn btn-lg btn-success mt-4">Sign Up Now</a>
+    {%endif%}
+    </div>
+</div>
+
+<div class="container my-5 containerExt">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="{{ url_for('static', filename='img/charts.jpg') }}" alt="Charts" class="img-fluid rounded shadow">
+    </div>
+    <div class="col-md-6 my-auto">
+      <h2 class="font-weight-bold text-primary mb-4">Introducing FinanceMe</h2>
+      <p class="text-secondary">FinanceMe is a personal finance management app that helps you track your income, expenses, and savings. With FinanceMe, you can easily create a budget, set financial goals, and make informed financial decisions.</p>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-6 my-auto order-md-2">
+      <img src="{{ url_for('static', filename='img/money.jpg') }}" alt="Coins" class="img-fluid rounded shadow">
+      
+       </div>
+    <div class="col-md-6 order-md-1">
+      <h2 class="font-weight-bold text-primary mb-4">How FinanceMe Works</h2>
+      <p class="text-secondary">FinanceMe offers a simple and intuitive interface that makes managing your finances easy and stress-free. You can create multiple accounts, add transactions, and track your spending by category.</p>
+   
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <img src="{{ url_for('static', filename='img/people.jpg') }}" alt="Picture of People" class="img-fluid rounded shadow">
+    </div>
+    <div class="col-md-6 my-auto">
+      <h2 class="font-weight-bold text-primary mb-4">Get Started with FinanceMe</h2>
+      <p class="text-secondary">Sign up for FinanceMe today and take control of your finances! It's free, secure, and easy to use.</p>
+      {% if not is_authenticated() %}
+      <a href="{{url_for('login')}}" class="btn btn-lg btn-success mt-4">Sign Up Now</a>
+    {%endif%}
+    </div>
+  </div>
+</div>
+{% endblock %}

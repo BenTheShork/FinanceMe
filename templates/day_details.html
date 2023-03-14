@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<div class="container containerExt">
+  <h1 class="display-4 mb-4">{{day}}</h1>
+  {% if not items %}
+  <div class="alert alert-danger my-4 mx-4" role="alert">
+      There are currently no purchases for this date. Create a purchase/inflow by clicking "Add item"
+      
+    </div>
+   
+   
+  {% else %}
+  <table class="table table-striped table-hover table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">Item</th>
+        <th scope="col">Price</th>
+        <th scope="col">Category</th>
+        <th scope="col" class="col-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in items %}
+      <tr>
+        <td>{{row["item"]}}</td>
+        <td>€{{row["price"]}}</td>
+        <td>{{row["category"]}}</td>
+        <td>
+          <a href="{{url_for('deleteItem', summary_id=row["id"], day=day)}}" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash-alt"></i> Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+{%endif%}
+  <div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#addItemModal">
+      <i class="fas fa-plus-circle"></i> Add item
+    </button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addItemModalLabel">Add item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% include "add_item_form.html" %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+  
+    <div class="form-group">
+      {{ form.item.label(class="form-control-label") }}
+      {{ form.item(class="form-control") }}
+      {% for error in form.item.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+  
+    <div class="form-group">
+      {{ form.price.label(class="form-control-label") }}
+      {{ form.price(class="form-control") }}
+      {% for error in form.price.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+  
+    <div class="form-group">
+      {{ form.description.label(class="form-control-label") }}
+      {{ form.description(rows=5, class="form-control custom-textarea") }}
+      {% for error in form.description.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+    {% if form.category.choices %}
+    <div class="form-group">
+        {{ form.category.label(class="form-control-label") }}
+        {{ form.category(class="form-control") }}
+    </div>
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-success mb-4"><i class="fas fa-plus-circle"></i> Add</button>
+    </div>
+{% else %}
+    <div class="alert alert-danger my-4 mx-4" role="alert">
+        There are currently no categories created. Create a category by going to "Categories tab" and adding category.  
+    </div>
+    <div class="form-group">
+        {{ form.category.label(class="form-control-label") }}
+        {{ form.category(class="form-control", disabled="disabled") }}
+    </div>
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-success mb-4" disabled><i class="fas fa-plus-circle"></i> Add</button>
+    </div>
+{% endif %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<div class="container containerExt">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="text-center mb-4">Register</h1>
+      <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+          {{ form.username.label(class="form-label") }}
+          {{ form.username(class="form-control") }}
+          {% for error in form.username.errors %}
+          <div class="invalid-feedback d-block"> {{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label(class="form-label") }}
+          {{ form.password(class="form-control") }}
+          {% for error in form.password.errors %}
+          <div class="invalid-feedback d-block"> {{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {{ form.password2.label(class="form-label") }}
+          {{ form.password2(class="form-control") }}
+          {% for error in form.password2.errors %}
+          <div class="invalid-feedback d-block"> {{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control") }}
+          {% for error in form.name.errors %}
+          <div class="invalid-feedback d-block"> {{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {{ form.surname.label(class="form-label") }}
+          {{ form.surname(class="form-control") }}
+          {% for error in form.surname.errors %}
+          <div class="invalid-feedback d-block"> {{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <a href="{{url_for('login')}}">Already have an account? Log in here.</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
+
+        {% if message %}
+          <div class="alert alert-danger mt-4" role="alert">
+            {{ message }}
+          </div>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
