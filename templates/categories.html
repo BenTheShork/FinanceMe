@@ -17,6 +17,7 @@
               <th scope="col">Number of Occurrences</th>
               <th scope="col">Total</th>
               <th scope="col">Actions</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -30,8 +31,9 @@
                 <td>€{{ row["total"] | default(0) }}</td>
                 {% endif %}
                 <td>
-                  <a href="{{ url_for('edit_category', category_id=row['id']) }}" class="btn btn-primary btn-sm">Details</a>
-                  
+                  <a href="{{ url_for('edit_category', category_id=row['id']) }}" class="btn btn-primary btn-sm" >Details</a>
+                </td>
+                <td>
                   <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal"><i class="fas fa-trash-alt"></i> Delete
                   </button>
                   <div class="modal fade" id="myModal">

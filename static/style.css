@@ -31,6 +31,7 @@
   cursor: pointer;
   background-color: #0062cc;
 }
+
 .containerExt {
   max-width: 800px;
   margin: 0 auto;
@@ -55,7 +56,7 @@
   height: 100%;
   font-size: 1rem;
   padding: 30px;
-  background-color:hsl(210, 6%, 61%);
+  background-color: hsl(210, 6%, 61%);
   color: #ffffff;
   border: none;
   outline: none;
@@ -65,19 +66,24 @@
 
 
 
-.disabled .btn-calendar .btn-calendar-over-limit, .btn-calendar-today{
+.disabled .btn-calendar .btn-calendar-over-limit,
+.btn-calendar-today {
   opacity: 0.6;
 }
 
 .card {
-  background-color: #d9edf7; /* set the card background color */
+  background-color: #d9edf7;
+  /* set the card background color */
   border: none;
   border-radius: 0;
   box-shadow: none;
 }
+
 .card-header {
-  background-color: #bce8f1; /* set the card header background color */
-  color: #ffffff; /* set the card header text color */
+  background-color: #bce8f1;
+  /* set the card header background color */
+  color: #ffffff;
+  /* set the card header text color */
   border-bottom: none;
 }
 
@@ -85,7 +91,7 @@
   padding: 0;
 }
 
-.btn-calendar-over-limit{
+.btn-calendar-over-limit {
   width: 100%;
   height: 100%;
   font-size: 1rem;
@@ -100,7 +106,7 @@
   border-color: #dc3545;
 }
 
-.btn-calendar-under-limit{
+.btn-calendar-under-limit {
   width: 100%;
   height: 100%;
   font-size: 1rem;
@@ -120,28 +126,37 @@ h1 {
   padding: 2%;
 }
 
-.btn-calendar, .btn-calendar-today{
-font-family: 'Roboto', sans-serif;
+.btn-calendar,
+.btn-calendar-today {
+  font-family: 'Roboto', sans-serif;
 }
 
 
 
 .btn-day {
-border: none;
+  border: none;
 }
-.btn-calendar:hover, .btn-calendar-today:hover{
-  background-color: #6c757d; /* darker color */
-  color: #fff; /* change text color to white */
+
+.btn-calendar:hover,
+.btn-calendar-today:hover {
+  background-color: #6c757d;
+  /* darker color */
+  color: #fff;
+  /* change text color to white */
 }
 
 .btn-calendar-over-limit:hover {
-  background-color: #94242f; /* darker color */
-  color: #ffffff; /* change text color to white */
+  background-color: #94242f;
+  /* darker color */
+  color: #ffffff;
+  /* change text color to white */
 }
 
 .btn-calendar-under-limit:hover {
-  background-color: #357655; /* darker color */
-  color: #ffffff; /* change text color to white */
+  background-color: #357655;
+  /* darker color */
+  color: #ffffff;
+  /* change text color to white */
 }
 
 a[href^="#"] {
@@ -153,54 +168,61 @@ a[href^="#"] {
   font-size: small;
   background-color: #dee2e6
 }
-.table-responsive{
+
+.table-responsive {
   display: inline-table;
   border: 0px;
 }
-h5{
+
+h5 {
   font-weight: lighter;
 }
-.container{
-}
 
-.error{
+.container {}
+
+.error {
   background-color: #dc3545;
   color: white;
 }
-.success{
+
+.success {
   background-color: #28a745;
   color: white;
 }
-html, body {
+
+html,
+body {
   height: 100%;
   margin: 0;
 }
- .wrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .content {
-    flex: 1;
-  }
-  
-  footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .modal-content{
-    border-radius: 0.5rem;
-  }
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1040;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.modal-content {
+  border-radius: 0.5rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
 }

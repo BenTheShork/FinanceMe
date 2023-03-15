@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, g
 from flask_session import Session
-from forms import *
+from forms.forms import loginForm, categoryForm, registerForm, settingsForm, itemForm
 from functionalities.authorisation import *
 from functionalities.categories import *
 from functionalities.dayDetails import *
@@ -41,33 +41,30 @@ def login_required(view):
 
 @app.route("/")
 def index():
-    return redirect(url_for("home"))
-
-
-@app.route("/home")
-def home():
     return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    form = loginForm()
+    if not is_authenticated():
+        session.clear()
     message = ""
+    form = loginForm()
+    print(request.method)
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
         data = checkLoginAndPassword(username)
         if data:
             if werkzeug.security.check_password_hash(data["password"], password):
-                session.clear()
                 session["user_id"] = data["id"]
-                return redirect(url_for('index'))
+                return redirect(url_for('calendar'))
             else:
                 message = "Your credentials were incorrect"
         else:
             message = "Your credentials were incorrect"
-
-    return render_template("login.html", form=form, message=message)
+    else:
+        return render_template("login.html", form=form, message=message)
 
 
 @app.route("/register", methods=["GET", "POST"])
