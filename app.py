@@ -63,8 +63,7 @@ def login():
                 message = "Your credentials were incorrect"
         else:
             message = "Your credentials were incorrect"
-    else:
-        return render_template("login.html", form=form, message=message)
+    return render_template("login.html", form=form, message=message)
 
 
 @app.route("/register", methods=["GET", "POST"])
