@@ -1,5 +1,6 @@
 from database.database import get_db, close_db
 
+
 def getSettingsById(user_id):
     """
     Returns settings for a specific user
@@ -12,7 +13,7 @@ def getSettingsById(user_id):
         ON settings.id = user.settings_id
         WHERE user.id = ? 
         """
-    response = db.execute(query, (str(user_id))).fetchone()
+    response = db.execute(query, (str(user_id),)).fetchone()
     return response
 
 
