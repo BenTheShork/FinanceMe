@@ -1,5 +1,6 @@
 from database.database import get_db, close_db
 
+
 def getItemsByDay(user_id, day):
     """
     Returnes item depending on a day and user
@@ -35,7 +36,7 @@ def populateCategories(user_id):
     ON user.id = category.user_id
     WHERE user.id  = ?
     """
-    categories = db.execute(query, str(user_id), ).fetchall()
+    categories = db.execute(query, (str(user_id),)).fetchall()
     select = []
     for category in categories:
         select.append(category["category"])

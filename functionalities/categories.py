@@ -13,7 +13,7 @@ def getCategories(user_id):
         INNER JOIN user
         ON summary.user_id = user.id WHERE user.id = ?
         """
-    response = db.execute(query, (str(user_id), )).fetchall()
+    response = db.execute(query, str(user_id)).fetchall()
     return response
 
 
