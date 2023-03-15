@@ -10,11 +10,13 @@ from flask import Flask, redirect
 from functools import wraps
 from datetime import datetime
 import werkzeug
+import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "keyIsverySecret"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['SESSION_FILE_DIR'] = 'flask_session'
 Session(app)
 
 
