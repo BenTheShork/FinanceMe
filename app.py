@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, session, redirect, url_for, g
 from flask_session import Session
-from forms.forms import loginForm, categoryForm, registerForm, settingsForm, itemForm
-from functionalities.authorisation import *
-from functionalities.categories import *
-from functionalities.dayDetails import *
-from functionalities.settings import *
-from functionalities.summary import *
+from forms import loginForm, categoryForm, registerForm, settingsForm, itemForm
+from authorisation import *
+from categories import *
+from dayDetails import *
+from settings import *
+from summary import *
 from flask import Flask, redirect
 from functools import wraps
 from datetime import datetime

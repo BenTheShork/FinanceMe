@@ -1,4 +1,4 @@
-from database.database import get_db, close_db
+from database import get_db, close_db
 
 def checkIfUserExists(username):
     """
