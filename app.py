@@ -156,16 +156,33 @@ def settings():
 
 
 @app.route("/calendar", methods=["GET", "POST"])
+@app.route("/calendar/<int:year>", methods=["GET", "POST"])
 @login_required
-def calendar():
+def calendar(year=None):
     user_id = session["user_id"]
-    months = createCalendar(2023, user_id)
+    
+    if year is None:
+        year = datetime.now().year
+        
+    months = createCalendar(year, user_id)  # Using your existing createCalendar function
     settings = getSettingsById(user_id)
     daily_limit = float(settings["daily_limit"])
     now = datetime.today().strftime('%Y-%m-%d')
     date = format_date(now)
-    return render_template('calendar.html', months=months, daily_limit=daily_limit, date=date)
-
+    
+    # Add month names for the template
+    month_names = {
+        1: 'January', 2: 'February', 3: 'March', 4: 'April',
+        5: 'May', 6: 'June', 7: 'July', 8: 'August',
+        9: 'September', 10: 'October', 11: 'November', 12: 'December'
+    }
+    
+    return render_template('calendar.html', 
+                         months=months, 
+                         daily_limit=daily_limit, 
+                         date=date,
+                         current_year=year,
+                         month_names=month_names)
 
 @app.route("/day_details/<string:day>", methods=["GET", "POST"])
 @login_required
@@ -173,6 +190,9 @@ def day_details(day):
     user_id = session["user_id"]
     items = getItemsByDay(user_id, day)
     categories = populateCategories(user_id)
+    settings = getSettingsById(user_id) 
+    daily_limit = float(settings["daily_limit"])  
+    
     form = itemForm()
     form.category.choices = categories
 
@@ -186,8 +206,11 @@ def day_details(day):
         addItem(item, price, description, user_id, date, selectedCategory)
         return redirect(url_for('day_details', day=day))
 
-    return render_template('day_details.html', items=items, day=day, form=form)
-
+    return render_template('day_details.html', 
+                         items=items, 
+                         day=day, 
+                         form=form, 
+                         daily_limit=daily_limit) 
 
 @app.route("/delete_item/<string:day>/<int:summary_id>", methods=["GET", "POST"])
 def deleteItem(day, summary_id):

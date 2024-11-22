@@ -1,109 +1,405 @@
-{% extends "base.html" %}
-
-{% block main_content %}
-  <div class="container containerExt">
-    <h1 class="display-4 mb-4">Categories</h1>
-    <div class="row justify-content-center">
-      <div class="col-md-12">
-        {% if not categories[0] %}
-        <div class="alert alert-danger my-4 mx-4" role="alert">
-          There are currently no categories. Create a category by clicking "Add category"
-        </div>
-        {%else%}
-        <table class="table-responsive table table-striped table-hover ">
-          <thead>
-            <tr>
-              <th scope="col">Category</th>
-              <th scope="col">Number of Occurrences</th>
-              <th scope="col">Total</th>
-              <th scope="col">Actions</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in categories %}
-              <tr>
-                <td>{{ row["category"] }}</td>
-                <td>{{ row["occurence"] }}</td>
-                {% if row["total"] == None%}
-                <td>€0</td>
-                {%else%}
-                <td>€{{ row["total"] | default(0) }}</td>
-                {% endif %}
-                <td>
-                  <a href="{{ url_for('edit_category', category_id=row['id']) }}" class="btn btn-primary btn-sm" >Details</a>
-                </td>
-                <td>
-                  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal"><i class="fas fa-trash-alt"></i> Delete
-                  </button>
-                  <div class="modal fade" id="myModal">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                      
-                        <div class="modal-header">
-                          <h4 class="modal-title">
-                            Are you sure you want to delete this category?</h4>
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        
-                        <div class="modal-body">
-                          If you do so, please keep in mind that all pruchases with this category will be deleted as well
-                        </div>
-                        
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                        <a href="{{url_for('deleteCategory', category_id = row["id"])}}" class="btn btn-success" role="button" aria-pressed="true" onclick="showPopup()">Yes</a>
-                     
-                        </div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
-       
-        <div class="d-flex justify-content-center">
-          <button data-toggle="modal" data-target="#addCategoryModal" class="btn btn-success mb-4">
-            <i class="fas fa-plus-circle"></i> Add category
-          </button>
-        </div>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
-                <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form action="" method="post" novalidate>
-                  {{ form.hidden_tag() }}
-                  <div class="form-group mx-auto my-auto">
-                    {{form.category.label}}
-                    {{form.category()}}
-                    {% for error in form.category.errors %}
-                    <div class="invalid-feedback d-block"> {{ error }}</div>
-                    {% endfor %}
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    {{ form.submit(class_="btn btn-success") }}
-                  </div>
-                </form>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-        
-      </div>
+{% extends "base.html" %} {% block main_content %}
+<div class="container containerExt">
+    <div class="page-header">
+        <h1 class="page-title">Categories</h1>
+        <button data-toggle="modal" data-target="#addCategoryModal" class="add-button">
+            <i class="fas fa-plus"></i> Add Category
+        </button>
     </div>
-  </div>
+
+    {% if not categories[0] %}
+    <div class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h4>No Categories Found</h4>
+        <p>Create a category by clicking "Add Category"</p>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Occurrences</th>
+                        <th>Total</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in categories %}
+                    <tr>
+                        <td>
+                            <span class="category-name">{{ row["category"] }}</span>
+                        </td>
+                        <td>{{ row["occurence"] }}</td>
+                        <td>€{{ row["total"] | default(0) }}</td>
+                        <td class="text-end action-buttons">
+                            <a href="{{ url_for('edit_category', category_id=row['id']) }}" class="action-button details-button">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Details</span>
+                            </a>
+                            <button type="button" class="action-button delete-button" data-toggle="modal" data-target="#deleteModal{{ row['id'] }}">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Delete</span>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deleteModal{{ row['id'] }}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="title-container">
+                                        <span class="icon-circle warning">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                                        <h5 class="modal-title">Delete Category</h5>
+                                    </div>
+                                    <button type="button" class="close-button" data-dismiss="modal">
+                                        <span>×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete <strong>{{ row["category"] }}</strong>?</p>
+                                    <p class="text-danger">
+                                        <i class="fas fa-exclamation-circle"></i> All purchases in this category will also be deleted.
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="cancel-button" data-dismiss="modal">
+                                        <i class="fas fa-times"></i>Cancel
+                                    </button>
+                                    <a href="{{ url_for('deleteCategory', category_id=row['id']) }}" class="delete-confirm-button">
+                                        <i class="fas fa-trash-alt"></i>Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="title-container">
+                        <span class="icon-circle">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <h5 class="modal-title">Add New Category</h5>
+                    </div>
+                    <button type="button" class="close-button" data-dismiss="modal">
+                        <span>×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.category.label(class="form-label") }} {{ form.category(class="form-control", placeholder="Enter category name") }} {% for error in form.category.errors %}
+                            <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-button" data-dismiss="modal">
+                                <i class="fas fa-times"></i>Cancel
+                            </button> {{ form.submit(class="save-button") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 500;
+        color: #333;
+        margin: 0;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 2rem 0;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: #adb5bd;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state h4 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+        color: #6c757d;
+        margin: 0;
+    }
+    /* Table Styles */
+    
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .table {
+        margin: 0;
+    }
+    
+    .table th {
+        background: #f8f9fa;
+        font-weight: 500;
+        color: #495057;
+        padding: 1rem;
+        border-top: none;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        color: #333;
+    }
+    
+    .category-name {
+        font-weight: 500;
+    }
+    /* Action Buttons */
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+    
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: none;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .details-button {
+        background: #e9ecef;
+        color: #495057;
+        text-decoration: none;
+    }
+    
+    .details-button:hover {
+        background: #dee2e6;
+        color: #212529;
+        text-decoration: none;
+    }
+    
+    .delete-button {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+    
+    .delete-button:hover {
+        background: #fecaca;
+    }
+    /* Add Button */
+    
+    .add-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .add-button:hover {
+        background: #218838;
+    }
+    
+    .modal-content {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .title-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .icon-circle {
+        width: 24px;
+        height: 24px;
+        background: #28a745;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .icon-circle.warning {
+        background: #dc3545;
+    }
+    
+    .icon-circle i {
+        color: white;
+        font-size: 12px;
+    }
+    
+    .close-button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #adb5bd;
+        padding: 0;
+        cursor: pointer;
+    }
+    
+    .close-button:hover {
+        color: #495057;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    /* Modal Footer Buttons */
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .cancel-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #f8f9fa;
+        color: #495057;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .cancel-button:hover {
+        background: #e9ecef;
+    }
+    
+    .save-button,
+    input[type="submit"].save-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .save-button:hover {
+        background: #218838;
+    }
+    
+    .delete-confirm-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .delete-confirm-button:hover {
+        background: #c82333;
+        text-decoration: none;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+            text-align: center;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .action-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
 {% endblock %}

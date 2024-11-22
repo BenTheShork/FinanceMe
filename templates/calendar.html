@@ -1,90 +1,102 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block main_content %}
+<div class="calendar-container">
+    <!-- Navigation and Controls -->
+    <div class="calendar-controls">
+        <div class="year-selector">
+            <button class="nav-button" onclick="window.location.href='{{ url_for('calendar', year=current_year-1) }}';">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h2 class="year-display">{{ current_year }}</h2>
+            <button class="nav-button" onclick="window.location.href='{{ url_for('calendar', year=current_year+1) }}'">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
 
-{% block main_content %}
+        <!-- Info Button -->
+        <button class="info-button" data-toggle="modal" data-target="#legendModal">
+            <i class="fas fa-info-circle"></i>
+            Legend
+        </button>
+    </div>
 
-<div class="container containerExt">
-    <a class="col-md-2" data-toggle="modal" data-target="#infoModal">Press Me
-        <i class="fa fa-info-circle" aria-hidden="true"></i>
-    </a>
-      
-      <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="infoModalLabel">Legend</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <div class = "container containerExt">
-                    <h6>Colour scheme: </h6>
-                        <div style = "margin-right: 5%">
-                            <ul>
-                                <a  class="btn btn-outline-danger btn-calendar-over-limit btn-day text-light">This colour represents surpassing your daily limit</a>
-                                <a  class="btn btn-outline-secondary btn-calendar-under-limit text-light">This colour represents staying withing your daily limit</a>
-                                <a  class="btn btn-outline-secondary btn-calendar-today text-black">This colour represents todays date</a>
-                                <a  class="btn btn-outline-secondary btn-calendar">This colour represents regular calendar days</a>
-                                
-                            </ul>
+    <!-- Legend Modal -->
+    <div class="modal fade" id="legendModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Expense Calendar Legend</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="legend-container">
+                        <div class="legend-item">
+                            <div class="color-box over-limit"></div>
+                            <span>Over Daily Limit (€{{'%0.2f'|format(daily_limit)}})</span>
                         </div>
+                        <div class="legend-item">
+                            <div class="color-box under-limit"></div>
+                            <span>Within Daily Limit</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="color-box today"></div>
+                            <span>Today</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="color-box regular"></div>
+                            <span>No Expenses</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-          </div>
-        </div>
-      </div>
-    <h1 class="display-4 mb-4 text-center">Calendar</h1>
-
-    {% for month in months %}
-    <div class="row justify-content-center mb-4 class="table-responsive"">
-        <div class="col-md-9">
-            <h1 class="text-center">{{ month.month }}/{{ month.year }}</h1>
-            
-            <table class="table-responsive table-bordered text-center">
-                <thead class="bg-light">
-                    <tr>
-                        <th scope="col" class="text-muted">Sun</th>
-                        <th scope="col" class="text-muted">Mon</th>
-                        <th scope="col" class="text-muted">Tue</th>
-                        <th scope="col" class="text-muted">Wed</th>
-                        <th scope="col" class="text-muted">Thu</th>
-                        <th scope="col" class="text-muted">Fri</th>
-                        <th scope="col" class="text-muted">Sat</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for week in month.days %}
-                    <tr>
-                        {% for day in week %}
-                        <td style="padding: 0;">
-                            {% if day %}
-                                {%if day.fullDate == date %}
-                                    <a href="{{url_for('day_details', day = day.fullDate)}}" class="btn btn-outline-secondary btn-calendar-today">{{ day.day }}</a>
-                                {%else%}
-                                    {%if day.total > 0 and day.total < daily_limit%}
-                                    <a href="{{url_for('day_details', day = day.fullDate)}}" class="btn btn-outline-secondary btn-calendar-under-limit">{{ day.day }}</a>
-                                    {%else%}
-                                        {% if day.total < daily_limit %}
-                                            <a href="{{url_for('day_details', day = day.fullDate)}}" class="btn btn-outline-secondary btn-calendar">{{ day.day }}</a>
-                                        {% else %}
-                                            <a href="{{url_for('day_details', day = day.fullDate)}}" class="btn btn-outline-danger btn-calendar-over-limit btn-day">{{ day.day }}</a>
-                                        {% endif %}
-                                    {%endif%}
-                                {%endif%}
-                            {% else %}
-                                <button type="button" class="btn btn-outline-secondary disabled btn-calendar ">-</button>
-                            
-                            
-                            {% endif %}
-                        </td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
     </div>
-    {% endfor %}
-</div>
 
+    <!-- Yearly Calendar Grid -->
+    <div class="yearly-calendar">
+        {% for month in months %}
+        <div class="month-container">
+            <div class="month-header">
+                <h3>{{ month_names[month.month] }} {{ month.year }}</h3>
+                <div class="month-total">
+                    Total: €{{ '%.2f'|format(month.total) }}
+                </div>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="weekday-header">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+
+                {% for week in month.days %}
+                <div class="week-row">
+                    {% for day in week %}
+                    <div class="day-cell">
+                        {% if day %}
+                        <a href="{{ url_for('day_details', day=day.fullDate) }}" class="day-button {{ 'today' if day.fullDate == date else 
+                                                  'over-limit' if day.total >= daily_limit else 
+                                                  'under-limit' if day.total > 0 else 
+                                                  'regular' }}" title="€{{ '%.2f'|format(day.total) if day.total else 'No expenses' }}">
+                            <span class="day-number">{{ day.day }}</span> {% if day.total > 0 %}
+                            <span class="expense-amount">€{{ "%.2f"|format(day.total) }}</span> {% endif %}
+                        </a>
+                        {% else %}
+                        <div class="day-button disabled">-</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -1,51 +1,65 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block main_content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>FinanceMe</h1>
+            <p class="hero-subtitle">Take control of your finances with smart expense tracking and budgeting</p>
+            {% if not is_authenticated() %}
+            <a href="{{ url_for('login') }}" class="cta-button">
+                <span>Get Started</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
 
-{% block main_content %}
-<div class="jumbotron jumbotron-fluid text-center py-5">
-  <div class="container">
-    <h1 class="display-4 font-weight-bold text-primary mb-4">FinanceMe</h1>
-    <p class="lead text-secondary">Take control of your finances with FinanceMe. Track your income, expenses, and savings, and make informed financial decisions.</p>
-    
-    {% if not is_authenticated() %}
-      <a href="{{url_for('login')}}" class="btn btn-lg btn-success mt-4">Sign Up Now</a>
-    {%endif%}
-    </div>
-</div>
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+            <div class="feature-content">
+                <h2>Track Your Expenses</h2>
+                <p>FinanceMe helps you monitor your spending with an intuitive calendar interface. Set daily and monthly limits, categorize expenses, and stay on top of your financial goals.</p>
+            </div>
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='img/charts.jpg') }}" alt="Financial tracking" class="feature-img">
+            </div>
+        </div>
 
-<div class="container my-5 containerExt">
-  <div class="row">
-    <div class="col-md-6">
-      <img src="{{ url_for('static', filename='img/charts.jpg') }}" alt="Charts" class="img-fluid rounded shadow">
-    </div>
-    <div class="col-md-6 my-auto">
-      <h2 class="font-weight-bold text-primary mb-4">Introducing FinanceMe</h2>
-      <p class="text-secondary">FinanceMe is a personal finance management app that helps you track your income, expenses, and savings. With FinanceMe, you can easily create a budget, set financial goals, and make informed financial decisions.</p>
-    </div>
-  </div>
+        <!-- Feature 2 -->
+        <div class="feature-card reverse">
+            <div class="feature-content">
+                <h2>Smart Budgeting</h2>
+                <p>Create and manage budgets easily with our intelligent categorization system. Get insights into your spending patterns and make informed financial decisions.</p>
+            </div>
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='img/money.jpg') }}" alt="Smart budgeting" class="feature-img">
+            </div>
+        </div>
 
-  <div class="row mt-5">
-    <div class="col-md-6 my-auto order-md-2">
-      <img src="{{ url_for('static', filename='img/money.jpg') }}" alt="Coins" class="img-fluid rounded shadow">
-      
-       </div>
-    <div class="col-md-6 order-md-1">
-      <h2 class="font-weight-bold text-primary mb-4">How FinanceMe Works</h2>
-      <p class="text-secondary">FinanceMe offers a simple and intuitive interface that makes managing your finances easy and stress-free. You can create multiple accounts, add transactions, and track your spending by category.</p>
-   
+        <!-- Feature 3 -->
+        <div class="feature-card">
+            <div class="feature-content">
+                <h2>Start Your Journey</h2>
+                <p>Join thousands of users who have already taken control of their finances. It's free, secure, and easy to use.</p>
+                {% if not is_authenticated() %}
+                <a href="{{ url_for('login') }}" class="secondary-cta">
+                    <span>Sign Up Now</span>
+                    <i class="fas fa-user-plus"></i>
+                </a>
+                {% endif %}
+            </div>
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='img/people.jpg') }}" alt="Join FinanceMe" class="feature-img">
+            </div>
+        </div>
     </div>
-  </div>
+</section>
 
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <img src="{{ url_for('static', filename='img/people.jpg') }}" alt="Picture of People" class="img-fluid rounded shadow">
-    </div>
-    <div class="col-md-6 my-auto">
-      <h2 class="font-weight-bold text-primary mb-4">Get Started with FinanceMe</h2>
-      <p class="text-secondary">Sign up for FinanceMe today and take control of your finances! It's free, secure, and easy to use.</p>
-      {% if not is_authenticated() %}
-      <a href="{{url_for('login')}}" class="btn btn-lg btn-success mt-4">Sign Up Now</a>
-    {%endif%}
-    </div>
-  </div>
-</div>
+<style>
+    /* Hero Section */
+</style>
 {% endblock %}

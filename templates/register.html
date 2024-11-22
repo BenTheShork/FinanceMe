@@ -1,68 +1,308 @@
-{% extends "base.html" %}
-
-{% block main_content %}
-
-<div class="container containerExt">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h1 class="text-center mb-4">Register</h1>
-      <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-
-        <div class="form-group">
-          {{ form.username.label(class="form-label") }}
-          {{ form.username(class="form-control") }}
-          {% for error in form.username.errors %}
-          <div class="invalid-feedback d-block"> {{ error }}</div>
-          {% endfor %}
+{% extends "base.html" %} {% block main_content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo-circle">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1>Create Account</h1>
+            <p class="auth-subtitle">Join FinanceMe to start tracking your expenses</p>
         </div>
 
-        <div class="form-group">
-          {{ form.password.label(class="form-label") }}
-          {{ form.password(class="form-control") }}
-          {% for error in form.password.errors %}
-          <div class="invalid-feedback d-block"> {{ error }}</div>
-          {% endfor %}
-        </div>
+        <form method="post" novalidate class="auth-form">
+            {{ form.hidden_tag() }}
 
-        <div class="form-group">
-          {{ form.password2.label(class="form-label") }}
-          {{ form.password2(class="form-control") }}
-          {% for error in form.password2.errors %}
-          <div class="invalid-feedback d-block"> {{ error }}</div>
-          {% endfor %}
-        </div>
+            <!-- Username Field -->
+            <div class="form-group">
+                {{ form.username.label(class="form-label") }}
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-user"></i>
+                    </span> {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Choose a username") }}
+                </div>
+                {% for error in form.username.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-          {{ form.name.label(class="form-label") }}
-          {{ form.name(class="form-control") }}
-          {% for error in form.name.errors %}
-          <div class="invalid-feedback d-block"> {{ error }}</div>
-          {% endfor %}
-        </div>
+            <!-- Password Fields -->
+            <div class="form-row">
+                <div class="form-group flex-grow">
+                    {{ form.password.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </span> {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Create password") }}
+                    </div>
+                    {% for error in form.password.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
 
-        <div class="form-group">
-          {{ form.surname.label(class="form-label") }}
-          {{ form.surname(class="form-control") }}
-          {% for error in form.surname.errors %}
-          <div class="invalid-feedback d-block"> {{ error }}</div>
-          {% endfor %}
-        </div>
+                <div class="form-group flex-grow">
+                    {{ form.password2.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </span> {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else ""), placeholder="Confirm password") }}
+                    </div>
+                    {% for error in form.password2.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
 
-        <div class="form-group">
-          <a href="{{url_for('login')}}">Already have an account? Log in here.</a>
-        </div>
+            <!-- Personal Info Fields -->
+            <div class="form-row">
+                <div class="form-group flex-grow">
+                    {{ form.name.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-id-card"></i>
+                        </span> {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="First name") }}
+                    </div>
+                    {% for error in form.name.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
 
-        <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
+                <div class="form-group flex-grow">
+                    {{ form.surname.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-id-card"></i>
+                        </span> {{ form.surname(class="form-control" + (" is-invalid" if form.surname.errors else ""), placeholder="Last name") }}
+                    </div>
+                    {% for error in form.surname.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
 
-        {% if message %}
-          <div class="alert alert-danger mt-4" role="alert">
-            {{ message }}
-          </div>
-        {% endif %}
-      </form>
+            {% if message %}
+            <div class="alert-message">
+                <i class="fas fa-exclamation-circle"></i> {{ message }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="submit-button">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+
+            <div class="auth-footer">
+                <span>Already have an account?</span>
+                <a href="{{ url_for('login') }}" class="login-link">
+                    Sign In
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </form>
     </div>
-  </div>
 </div>
 
+<style>
+    /* Base Styles from Login Page */
+    
+    .auth-container {
+        min-height: calc(100vh - 160px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: #f8f9fa;
+    }
+    
+    .auth-card {
+        width: 100%;
+        max-width: 600px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .logo-circle {
+        width: 64px;
+        height: 64px;
+        background: #28a745;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .logo-circle i {
+        font-size: 28px;
+        color: white;
+    }
+    
+    .auth-header h1 {
+        font-size: 1.75rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    /* Form Layout */
+    
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 0;
+    }
+    
+    .flex-grow {
+        flex: 1;
+    }
+    /* Form Elements */
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+    
+    .input-group {
+        position: relative;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        z-index: 10;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.75rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+    }
+    
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .error-message::before {
+        content: "•";
+    }
+    /* Alert Message */
+    
+    .alert-message {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #fff5f5;
+        color: #dc3545;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+    /* Buttons */
+    
+    .submit-button {
+        width: 100%;
+        padding: 0.875rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .submit-button:hover {
+        background: #218838;
+        transform: translateY(-1px);
+    }
+    /* Footer */
+    
+    .auth-footer {
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.95rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .login-link {
+        color: #28a745;
+        text-decoration: none;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .login-link:hover {
+        color: #218838;
+        text-decoration: none;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .auth-card {
+            padding: 1.5rem;
+        }
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        .auth-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-container {
+            padding: 1rem;
+        }
+    }
+</style>
 {% endblock %}

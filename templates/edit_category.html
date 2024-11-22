@@ -1,45 +1,319 @@
-{% extends "base.html" %}
-{% block main_content %}
+{% extends "base.html" %} {% block main_content %}
 
 <div class="container containerExt">
-  <h1 class="display-4 mb-4">Details</h1>
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{form.category.label}}
-      {{form.category(class="form-control")}}
-    
-      {% for error in form.category.errors %}
-      <div class="invalid-feedback d-block"> {{ error }}</div>
-      {% endfor %}
-    
+    <div class="page-header">
+        <div class="header-nav">
+            <a href="{{ url_for('categories') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="page-title">Category Details</h1>
+        </div>
     </div>
-    {{ form.submit(class = "btn btn-primary mt-3", style = "margin-bottom:5%", value = "Save category name") }}
-  </form>
-  {% if not items[0]["price"] %}
-  <div class="alert alert-danger my-4 mx-4" role="alert">
-      There are currently no purchases/inflows that match this category.
+
+    <!-- Edit Category Card -->
+    <div class="card edit-card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.category.label(class="form-label") }} {{ form.category(class="form-control") }} {% for error in form.category.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {{ form.submit(class="save-button", value="Save Category Name") }}
+            </form>
+        </div>
     </div>
-  {% else %}
-    <table class="table table-striped table-hover table-responsive">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Price</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in items %}
-        <tr>
-          <td>{{row["item"]}}</td>
-          <td>{{row["price"]}}</td>
-          <td>{{row["date"]}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <p class="mt-3">{{items[0]["total"]}}</p>
-  {% endif %}
+
+    <!-- Summary Cards -->
+    {% if items %} {% set total = namespace(value=0) %} {% for item in items %} {% set total.value = total.value + item["price"] %} {% endfor %}
+    <div class="summary-cards">
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div class="summary-content">
+                <h3>Total Expenses</h3>
+                <p class="summary-value">€{{ '%.2f'|format(total.value) }}</p>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="summary-content">
+                <h3>Total Items</h3>
+                <p class="summary-value">{{ items|length }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="card table-card">
+        <div class="card-header">
+            <h2>Transactions</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in items %}
+                    <tr>
+                        <td class="item-name">{{ row["item"] }}</td>
+                        <td class="price">€{{ '%.2f'|format(row["price"]|float) }}</td>
+                        <td class="date">{{ row["date"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-receipt"></i>
+        <h4>No Transactions Found</h4>
+        <p>There are currently no purchases/inflows that match this category.</p>
+    </div>
+    {% endif %}
 </div>
+
+<style>
+    /* Page Layout */
+    
+    .containerExt {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .page-header {
+        margin-bottom: 2rem;
+    }
+    
+    .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .back-button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border: none;
+        border-radius: 50%;
+        color: #495057;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    
+    .back-button:hover {
+        background: #e9ecef;
+        color: #212529;
+    }
+    
+    .page-title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 500;
+        color: #333;
+    }
+    /* Cards */
+    
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        border: none;
+    }
+    
+    .card-header {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    /* Form Styles */
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    /* Summary Cards */
+    
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .summary-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+        background: #e9ecef;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #495057;
+    }
+    
+    .summary-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .summary-content h3 {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .summary-value {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: #333;
+    }
+    /* Table Styles */
+    
+    .table {
+        margin: 0;
+    }
+    
+    .table th {
+        background: #f8f9fa;
+        font-weight: 500;
+        color: #495057;
+        padding: 1rem;
+        border-top: none;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        color: #333;
+    }
+    
+    .item-name {
+        font-weight: 500;
+    }
+    
+    .price {
+        font-family: monospace;
+    }
+    /* Buttons */
+    
+    .save-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .save-button:hover {
+        background: #218838;
+    }
+    /* Empty State */
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 2rem 0;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: #adb5bd;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state h4 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+        color: #6c757d;
+        margin: 0;
+    }
+    /* Responsive Adjustments */
+    
+    @media (max-width: 768px) {
+        .summary-cards {
+            grid-template-columns: 1fr;
+        }
+        .page-title {
+            font-size: 1.5rem;
+        }
+        .summary-value {
+            font-size: 1.25rem;
+        }
+    }
+</style>
 {% endblock %}

@@ -1,86 +1,326 @@
-{% extends "base.html" %}
-{% block main_content %}
+{% extends "base.html" %} {% block main_content %}
 
 <div class="container containerExt">
-  <h1 class="display-4 mb-4">Settings</h1>
-  <form id="limit-form" action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-
-    <div class="form-group">
-      {{form.daily_limit.label}}
-      {{form.daily_limit(class="form-control")}}
-
-      {% for error in form.daily_limit.errors %}
-      <div class="invalid-feedback d-block"> {{ error }}</div>
-      {% endfor %}
-
+    <div class="page-header">
+        <h1 class="page-title">Settings</h1>
     </div>
 
-    <div class="form-group">
-      {{form.monthly_limit.label}}
-      {{form.monthly_limit(class="form-control")}}
+    <div class="card settings-card">
+        <div class="card-header">
+            <h2>Spending Limits</h2>
+        </div>
+        <div class="card-body">
+            <form id="limit-form" method="post" novalidate>
+                {{ form.hidden_tag() }}
 
-      {% for error in form.monthly_limit.errors %}
-      <div class="invalid-feedback d-block"> {{ error }}</div>
-      {% endfor %}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.daily_limit.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text">€</span> {{ form.daily_limit(class="form-control", placeholder="0.00") }}
+                        </div>
+                        {% for error in form.daily_limit.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">Maximum amount you want to spend per day</div>
+                    </div>
 
+                    <div class="form-group">
+                        {{ form.monthly_limit.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text">€</span> {{ form.monthly_limit(class="form-control", placeholder="0.00") }}
+                        </div>
+                        {% for error in form.monthly_limit.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">Maximum amount you want to spend per month</div>
+                    </div>
+                </div>
+
+                {{ form.submit(class="save-button", value="Save Settings") }}
+            </form>
+        </div>
     </div>
-
-   {{ form.submit( class="btn btn-primary mt-3", style = "margin-bottom: 10%") }}
-
-  </form>
-
-  <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="success-modal-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header success">
-          <h5 class="modal-title" id="success-modal-label">Success!</h5>
-          <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          The limit has been successfully changed.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header error">
-          <h5 class="modal-title" id="error-modal-label">Error!</h5>
-          <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          The monthly limit can not be lesser value than the daily limit
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
-{% if form.csrf_token and message%} 
-  <script>
-    {% if form.is_submitted() and form.validate() %}
-      $('#error-modal').modal('show');
-    {% endif %}
-  </script>
-{%elif form.csrf_token%}
+
+<!-- Success Modal -->
+<div class="modal fade" id="success-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="title-container">
+                    <span class="icon-circle success">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <h5 class="modal-title">Settings Updated</h5>
+                </div>
+                <button type="button" class="close-button" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Your spending limits have been successfully updated.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="confirm-button" data-dismiss="modal">
+                    <i class="fas fa-check"></i>Got it
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="title-container">
+                    <span class="icon-circle error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    <h5 class="modal-title">Invalid Limits</h5>
+                </div>
+                <button type="button" class="close-button" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="error-message">
+                    <i class="fas fa-exclamation-circle"></i> Monthly limit cannot be less than daily limit.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="confirm-button" data-dismiss="modal">
+                    <i class="fas fa-check"></i>Understood
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Layout */
+    
+    .containerExt {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .page-header {
+        margin-bottom: 2rem;
+    }
+    
+    .page-title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 500;
+        color: #333;
+    }
+    /* Card Styles */
+    
+    .settings-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    
+    .card-header {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    /* Form Styles */
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .input-group {
+        display: flex;
+        align-items: stretch;
+    }
+    
+    .input-group-text {
+        padding: 0.75rem 1rem;
+        background: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 4px 0 0 4px;
+        color: #495057;
+    }
+    
+    .form-control {
+        height: auto;
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 0 4px 4px 0;
+        transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    
+    .form-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    /* Modal Styles */
+    
+    .modal-content {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .title-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .icon-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .icon-circle.success {
+        background: #28a745;
+    }
+    
+    .icon-circle.error {
+        background: #dc3545;
+    }
+    
+    .icon-circle i {
+        color: white;
+        font-size: 12px;
+    }
+    
+    .close-button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #adb5bd;
+        padding: 0;
+        cursor: pointer;
+    }
+    
+    .close-button:hover {
+        color: #495057;
+    }
+    /* Button Styles */
+    
+    .save-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .save-button:hover {
+        background: #218838;
+    }
+    
+    .confirm-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .confirm-button:hover {
+        background: #218838;
+    }
+    /* Responsive Adjustments */
+    
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
 <script>
-  {% if form.is_submitted() and form.validate() %}
-    $('#success-modal').modal('show');
-  {% endif %}
+    { %
+        if form.csrf_token and message %
+    }
+    $(document).ready(function() {
+        $('#error-modal').modal('show');
+    }); { % elif form.csrf_token %
+    } { %
+        if form.is_submitted() and form.validate() %
+    }
+    $(document).ready(function() {
+        $('#success-modal').modal('show');
+    }); { % endif %
+    } { % endif %
+    }
 </script>
-{% endif %}
 {% endblock %}
